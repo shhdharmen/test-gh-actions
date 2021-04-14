@@ -5,19 +5,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: browser-actions/setup-chrome@latest
-      - run: chrome --version
       - name: Use Node.js 14.x
         uses: actions/setup-node@v1
         with:
           node-version: 14.x
-      - name: npm install, lint, test, build and deploy
+          
+      - name: Setup
+        run: npm ci
+
+      - name: Test
         run: |
-          sudo apt-get update
-          sudo apt-get --only-upgrade install google-chrome-stable
-          google-chrome --version
-          npm ci
-          # npm run webdriver-update-ci
           npm test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
-          # npm run e2e -- --protractor-config=e2e/protractor-ci.conf.js --webdriver-update=false
-          CHROMIUM_BIN=$(which chrome) npm run e2e -- --protractor-config=e2e/protractor-ci.conf.js
+          npm run e2e -- --protractor-config=e2e/protractor-ci.conf.js
